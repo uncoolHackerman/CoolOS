@@ -1,0 +1,94 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD bin/stage2.o
+LOAD bin/stage2a.o
+LOAD /usr/local/i686-elf-gcc/lib/gcc/i686-elf/11.3.0/libgcc.a
+                0x0000000000000500                phys = 0x500
+                0x0000000000000500                . = phys
+
+.entry          0x0000000000000500        0x0
+                0x0000000000000500                __entry_start = .
+ *(.entry)
+
+.text           0x0000000000000500      0xd14
+                0x0000000000000500                __text_start = .
+ *(.text)
+ .text          0x0000000000000500      0x226 bin/stage2.o
+                0x0000000000000500                entry
+                0x0000000000000585                inb
+                0x0000000000000592                outb
+                0x00000000000005a0                BIOS_ReadSectors
+                0x000000000000061d                BIOS_GetDriveParameters
+                0x00000000000006da                BIOS_ResetDisk
+ *fill*         0x0000000000000726        0xa 
+ .text          0x0000000000000730      0xae4 bin/stage2a.o
+                0x0000000000000730                memcmp
+                0x0000000000000780                memcpy
+                0x00000000000007c0                memset
+                0x00000000000007f0                malloc
+                0x0000000000000850                free
+                0x0000000000000890                putc
+                0x0000000000000970                ClrScr
+                0x00000000000009b0                puts
+                0x00000000000009f0                putnum
+                0x0000000000000ab0                printf
+                0x0000000000000c40                ScrollScreen
+                0x0000000000000cc0                io_wait
+                0x0000000000000ce0                TestA20
+                0x0000000000000cf0                EnableA20
+                0x0000000000000d00                DisableA20
+                0x0000000000000d40                ReadSectors
+                0x0000000000000de0                LBA2CHS
+                0x0000000000000e20                DiskInitialise
+                0x0000000000000ea0                ReadBootRecord
+                0x0000000000000ec0                ReadRootDirectory
+                0x0000000000000f20                FindFile
+                0x0000000000000fa0                ReadFile
+                0x0000000000001040                Cluster2LBA
+                0x0000000000001060                ReadFat
+                0x0000000000001090                FatInitialise
+
+.text.startup   0x0000000000001220      0x23c
+ .text.startup  0x0000000000001220      0x23c bin/stage2a.o
+                0x0000000000001220                main
+
+.data           0x000000000000145c       0x15
+                0x0000000000001474                __data_start = .
+ *(.data)
+ .data          0x000000000000145c       0x15 bin/stage2a.o
+                0x000000000000145c                g_DataSectionLBA
+                0x0000000000001460                g_Hex
+
+.rodata         0x0000000000001474       0x58
+                0x0000000000001474                __data_start = .
+ *(.rodata)
+ .rodata        0x0000000000001474       0x58 bin/stage2a.o
+
+.rodata.str1.4  0x00000000000014cc       0xb6
+ .rodata.str1.4
+                0x00000000000014cc       0xb6 bin/stage2a.o
+
+.rodata.str1.1  0x0000000000001582       0xaa
+ .rodata.str1.1
+                0x0000000000001582       0xaa bin/stage2a.o
+
+.bss            0x0000000000001640      0x61c
+                0x0000000000001640                __bss_start = .
+ *(.bss)
+ .bss           0x0000000000001640      0x61c bin/stage2a.o
+                0x0000000000001640                g_CurrentDirectory
+                0x0000000000001644                CursorY
+                0x0000000000001648                CursorX
+                0x000000000000164c                MallocIndex
+                0x0000000000001650                MallocTableSize
+                0x0000000000001c5c                __end = .
+OUTPUT(bin/stage2.bin binary)
+
+.comment        0x0000000000000000       0x13
+ .comment       0x0000000000000000       0x13 bin/stage2a.o
