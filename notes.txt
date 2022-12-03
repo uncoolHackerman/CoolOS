@@ -1,0 +1,73 @@
+Boot Sequence
+When a computer is powered on or reset, it runs a series of tests called POST (Power On Self Test). This sequence ends with locating a bootable device,
+such as a floppy disk, CD-ROM, or Hard Disk. The POST will look for devices in the order that the firmware is configured to. 
+
+Master Boot Record (MBR)
+The (legacy) BIOS checks bootable devices for a boot signature, a "magic number". The boot signature has a value of bytes 0x55, 0xAA at offsets 510 and 511
+in the boot sector respectively. The boot sector is the first sector and is loaded at address 0x0000:0x7C00 (however some BIOSes load it at address 
+0x07C0:0x0000. While they both resolve to the same physical address, it may be unexpected and as such, CS should be set to zero in the bootloader to avoid 
+this). the BIOS will only load the boot sector and other sectors must be read by the bootloader
+
+Segment:Offset Addressing
+Segment and offset addressing uses two numbers to reference far pointers (pointers in different segments) and is formatted as segment:offset. To convert a
+segment:offset address to a linear (physical) address: (Address = Segment << 4) + Offset. To convert a linear address to a segment:offset address:
+segment:offset = ((address & 0xFFFF0000) >> 4):(address & 0x0000FFFF). The current address is defined as CS:IP where CS and IP are both CPU registers.
+
+Early Environment
+The early environment is very dependent on the BIOS that loaded it. Therefore the contents of registers and stack registers can vary from system to system.
+The only register with a known value is DL which contains the boot disk number. All other registers must be set by the bootloader. Most BIOSes load the early
+environment in 16 bit real mode and bootloaders should be written for this processor mode unless they are written for the rare BIOSes that load the early
+environment in protected mode.
+
+Real Mode
+In real mode, the BIOS supplies the operating system with lots low level API functions in the form of processor interrupts to save boot sector space. While 
+there are many benefits of having such interrupts, memory is limited to 1 megabyte and security features such as privilege levels and memory protection are 
+not implemented so using real mode in the long term is impractical and potentially unsafe if a program does something it usually wouldn't be to do in protected
+mode. 32 bit registers are still accessible by using the operand size override prefix (0x66) at the beginning of an instruction, most assemblers do this
+automatically.
+
+BIOS Interrupts
+https://en.wikipedia.org/wiki/BIOS_interrupt_call
+https://www.ctyme.com/intr/int.htm
+
+Stack
+the bottom (base) of the stack is held in the address SS:BP. The current location in the stack is held in the address SS:SP. This address grows downwards
+(decreases) as more values are placed onto the stack.
+
+High Memory Area
+the address range: 0xFFFF:0x0000(0x000FFFF0) - 0xFFFF:0xFFFF(0x0010FFEF) is known as the high memory area. The A20 line must be enabled for the high memory
+area to be accessible.
+
+A20 Line
+The A20 line allows more than 1 megabyte to be addressed. It is disabled by default to maintain compatibility with the intel 8086. When the A20 line is
+disabled, accessing memory over the 1 megabyte limit will wrap around. The A20 gate is enabled through the keyboard controller. The reason for this is that,
+when the A20 line was introduced, there weren't any spare pins on the address lines. There was however a spare pin on the keyboard controller and it was used
+to interface the A20 line.
+
+Protected Mode
+Protected mode has been the main processor mode on intel processors since the intel 80286 introduced a very limited 16 bit protected mode and the 80386
+introduced a more functional 32 bit protected mode. 32 bit Protected mode allows up to 4 gigabytes of addressable memory and allows the cpu instruction set to
+be limited via rings. Ring 0 has the highest privilege level and ring 3 has the lowest. Switching from real mode to protected mode requires the following steps
+step 1: disable interrupts
+step 2: enable the A20 line (optional if you don't need more than 1MB of memory)
+step 3: load the Global Descriptor Table
+step 4: enable the PE bit (bit 0) of the CR0 register
+step 5: perform a far jump to (GDT 32-bit code entry * 8):(address of the protected mode code)
+step 6: set the other segment registers to (GDT 32-bit data entry * 8)
+
+Global Descriptor Table (GDT)
+The GDT is a binary data stucture with each entry being 8 bytes long. Each entry contains information about a specific memory segment such as whether the 
+memory segment contains data or code, and how many bits wide the segment is. The GDT is loaded into the gdtr register using the lgdt instruction. Its 
+operand is a pointer to the GDT descriptor which contains the size of the GDT and its address.
+
+Logical Block Addressing (LBA addressing) and Cylinder, Sector, Head (CHS) addressing
+An LBA address represents the sector number of a given section of data on a disk starting at 0. A CHS address also represents the sector number, however 
+CHS uses three numbers to specify the physical cylinder, head, and sector numbers of the data region. Cylinder and Head both start at 0, but the sector 
+number begins at 1. to convert an LBA Address to a CHS address:
+Cylinder = (LBA / SectorsPerCylinder) / Heads
+Head = (LBA / SectorsPerCylinder) % Heads
+Sector = LBA % SectorsPerCylinder + 1
+
+File Allocation Table (FAT)
+https://wiki.osdev.org/FAT
+https://en.wikipedia.org/wiki/Design_of_the_FAT_file_system
