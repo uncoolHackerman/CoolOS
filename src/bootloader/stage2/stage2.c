@@ -46,6 +46,5 @@ void main(const uint8_t BootDrive)
         }
         putc('\n');
     }
-    printf("Now on GitHub!\n");
     return;
 }
