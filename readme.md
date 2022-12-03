@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 # Changelogs
 
 ## stage2.bin v0.0.04 (02/12/2022)
+=======
+<h1>Changelogs</h1>
+
+<h2>stage2.bin v0.0.04 (02/12/2022)</h2>
+>>>>>>> 7e5a101d07ba9b08989c18e1b82534ecff72d96d
 
 - added disk functions:
   - bool BIOS_ReadSectors(uint8_t Drive, uint16_t Cylinder, uint16_t Head, uint16_t Sector, uint8_t Count, void* BufferOut)
@@ -10,7 +16,11 @@
   - void LBA2CHS(DISK*disk, uint32_t lba, uint16_t* Cylinder, uint16_t*Head, uint16_t* Sector)
 - added DISK structure to hold Drive Parameters
 
+<<<<<<< HEAD
 ## stage2.bin v0.0.05 (03/12/2022)
+=======
+<h2>stage2.bin v0.0.05 (03/12/2022)</h2>
+>>>>>>> 7e5a101d07ba9b08989c18e1b82534ecff72d96d
 
 - added FAT functions
   - bool ReadBootRecord(DISK* disk, uint8_t Drive)
