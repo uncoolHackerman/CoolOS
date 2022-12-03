@@ -10,8 +10,7 @@
 
 /*
 To-do:
-- write some FAT reading functions (readfile, findfile, readRoot, etc...)
-- write some memory management functions
+- Load the kernel
 */
 
 void main(const uint8_t BootDrive)

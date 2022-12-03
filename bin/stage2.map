@@ -54,40 +54,40 @@ LOAD /usr/local/i686-elf-gcc/lib/gcc/i686-elf/11.3.0/libgcc.a
                 0x0000000000001060                ReadFat
                 0x0000000000001090                FatInitialise
 
-.text.startup   0x0000000000001220      0x23c
- .text.startup  0x0000000000001220      0x23c bin/stage2a.o
+.text.startup   0x0000000000001220      0x22c
+ .text.startup  0x0000000000001220      0x22c bin/stage2a.o
                 0x0000000000001220                main
 
-.data           0x000000000000145c       0x15
-                0x0000000000001474                __data_start = .
+.data           0x000000000000144c       0x15
+                0x0000000000001464                __data_start = .
  *(.data)
- .data          0x000000000000145c       0x15 bin/stage2a.o
-                0x000000000000145c                g_DataSectionLBA
-                0x0000000000001460                g_Hex
+ .data          0x000000000000144c       0x15 bin/stage2a.o
+                0x000000000000144c                g_DataSectionLBA
+                0x0000000000001450                g_Hex
 
-.rodata         0x0000000000001474       0x58
-                0x0000000000001474                __data_start = .
+.rodata         0x0000000000001464       0x58
+                0x0000000000001464                __data_start = .
  *(.rodata)
- .rodata        0x0000000000001474       0x58 bin/stage2a.o
+ .rodata        0x0000000000001464       0x58 bin/stage2a.o
 
-.rodata.str1.4  0x00000000000014cc       0xb6
+.rodata.str1.4  0x00000000000014bc       0xb6
  .rodata.str1.4
-                0x00000000000014cc       0xb6 bin/stage2a.o
+                0x00000000000014bc       0xb6 bin/stage2a.o
 
-.rodata.str1.1  0x0000000000001582       0xaa
+.rodata.str1.1  0x0000000000001572       0x9a
  .rodata.str1.1
-                0x0000000000001582       0xaa bin/stage2a.o
+                0x0000000000001572       0x9a bin/stage2a.o
 
-.bss            0x0000000000001640      0x61c
-                0x0000000000001640                __bss_start = .
+.bss            0x0000000000001620      0x61c
+                0x0000000000001620                __bss_start = .
  *(.bss)
- .bss           0x0000000000001640      0x61c bin/stage2a.o
-                0x0000000000001640                g_CurrentDirectory
-                0x0000000000001644                CursorY
-                0x0000000000001648                CursorX
-                0x000000000000164c                MallocIndex
-                0x0000000000001650                MallocTableSize
-                0x0000000000001c5c                __end = .
+ .bss           0x0000000000001620      0x61c bin/stage2a.o
+                0x0000000000001620                g_CurrentDirectory
+                0x0000000000001624                CursorY
+                0x0000000000001628                CursorX
+                0x000000000000162c                MallocIndex
+                0x0000000000001630                MallocTableSize
+                0x0000000000001c3c                __end = .
 OUTPUT(bin/stage2.bin binary)
 
 .comment        0x0000000000000000       0x13
