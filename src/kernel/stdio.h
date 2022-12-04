@@ -18,9 +18,29 @@ To-Do:
 #define SCREEN_WIDTH 80
 #define SCREEN_HEIGHT 25
 
+enum VGA_Colours {
+    VGA_COLOUR_BLACK = 0,
+    VGA_COLOUR_BLUE,
+    VGA_COLOUR_GREEN,
+    VGA_COLOUR_CYAN,
+    VGA_COLOUR_RED,
+    VGA_COLOUR_MAGENTA,
+    VGA_COLOUR_BROWN,
+    VGA_COLOUR_LIGHT_GREY,
+    VGA_COLOUR_GREY,
+    VGA_COLOUR_LIGHT_BLUE,
+    VGA_COLOUR_LIME,
+    VGA_COLOUR_LIGHT_CYAN,
+    VGA_COLOUR_LIGHT_RED,
+    VGA_COLOUR_PINK,
+    VGA_COLOUR_YELLOW,
+    VGA_COLOUR_WHITE
+};
+
 uint32_t CursorX = 0;
 uint32_t CursorY = 0;
-uint8_t CHAR_COLOUR = 0x0F;
+uint8_t CHAR_FOREGROUND = VGA_COLOUR_WHITE;
+uint8_t CHAR_BACKGROUND = VGA_COLOUR_BLACK;
 
 void putc(char c);
 void ClrScr(void);
@@ -47,7 +67,7 @@ void putc(char c)
             break;
     }
     Position++;
-    *(char*)Position = CHAR_COLOUR;
+    *(char*)Position = CHAR_BACKGROUND << 4 | CHAR_FOREGROUND;
     if(CursorX >= SCREEN_WIDTH) {
         CursorY++;
         CursorX = 0;
@@ -59,7 +79,8 @@ void putc(char c)
 
 void ClrScr(void)
 {
-    memset(CHAR_BUFFER, 0, SCREEN_HEIGHT * SCREEN_WIDTH * 2);
+    for(int i = 0; i < SCREEN_HEIGHT * SCREEN_WIDTH; i++)
+        putc(0);
     CursorX = 0;
     CursorY = 0;
     return;
@@ -128,6 +149,7 @@ void printf(const char* fmt, ...)
                     case 'u':
                         putnum(va_arg(args, unsigned int), 10, 0);
                         break;
+                    case 'p':
                     case 'x':
                         putnum(va_arg(args, unsigned int), 16, 0);
                         break;

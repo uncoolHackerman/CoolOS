@@ -72,6 +72,7 @@ bool ReadFile(DISK* disk, uint8_t Drive, DirectoryEntry* file, void* BufferOut);
 uint32_t Cluster2LBA(uint16_t Cluster);
 bool ReadFat(DISK* disk, uint8_t Drive);
 bool FatInitialise(DISK* disk, uint8_t Drive);
+bool OpenDirectory(DISK* disk, uint8_t drive, char* path);
 
 uint32_t g_DataSectionLBA = 33;             // a good assumption to make
 
@@ -149,10 +150,25 @@ bool FatInitialise(DISK* disk, uint8_t Drive) {
         return false;
     }
     g_CurrentDirectory = (DirectoryEntry*)malloc(g_FatData.BootSect.u_BootSector.RootDirEntries * sizeof(DirectoryEntry));
-    if(!ReadRootDirectory(disk, Drive, g_CurrentDirectory)) {
-        printf("Could not read root directory\n");
-        return false;
-    }
+    OpenDirectory(disk, Drive, "/");
+}
+
+bool OpenDirectory(DISK* disk, uint8_t drive, char* path) {
+    if(path[0] == '/')
+        ReadRootDirectory(disk, drive, g_CurrentDirectory);
+    if(path[1] == 0) return true;
+    char* nextPath;
+    DirectoryEntry* fd;
+    do {
+        path++;
+        nextPath = strchr(path, '/');
+        if(nextPath) *nextPath = 0;
+        fd = FindFile(g_CurrentDirectory, path);
+        if(!fd) return false;
+        ReadFile(disk, drive, fd, g_CurrentDirectory);
+        path = nextPath;
+    } while(nextPath && path[1]);
+    return true;
 }
 
 #endif

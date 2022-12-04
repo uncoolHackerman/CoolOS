@@ -9,6 +9,7 @@
 char* strchr(char* str, char chr);
 uint32_t strlen(char* str);
 char ToUpper(char c);
+char* strstr(char* str, char* str2);
 
 // a method for finding the first instance of the char chr in the string str
 char* strchr(char* str, char chr) {
@@ -36,6 +37,14 @@ char ToUpper(char c) {
 char ToLower(char c) {
     if(c >= 'A' && c <= 'Z') return c + 32;
     return c;
+}
+
+char* strstr(char* str, char* str2) {
+    while(*str) {
+        if(memcmp(str, str2, strlen(str2))) return str + strlen(str2);
+        str++;
+    }
+    return NULL;
 }
 
 #endif

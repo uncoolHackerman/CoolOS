@@ -32,6 +32,7 @@ default: always bootloader kernel
 	mcopy -i $(BINDIR)/$(DISK) $(SRCDIR)/bootloader/stage2/*.* "::/src/"
 	mcopy -i $(BINDIR)/$(DISK) $(SRCDIR)/kernel/*.* "::/src/kernel/"
 	mcopy -i $(BINDIR)/$(DISK) $(BINDIR)/*.bin "::/system/"
+	mcopy -i $(BINDIR)/$(DISK) $(SRCDIR)/bootloader/stage2/coolboot.sys "::/coolboot.sys"
 	rm $(BINDIR)/*.bin
 	rm $(BINDIR)/*.o
 
@@ -43,7 +44,8 @@ bootloader:
 
 kernel:
 	$(CC32) $(CFLAGS32) $(SRCDIR)/kernel/kernel.c -o $(BINDIR)/kernel.o
-	$(LD32) $(LDFLAGS32) -T kernel.ld -Wl,-Map=$(BINDIR)/kernel.map $(BINDIR)/kernel.o -o $(BINDIR)/kernel.bin
+	$(ASM) -f elf -o $(BINDIR)/wrappers.o $(SRCDIR)/kernel/wrappers.asm
+	$(LD32) $(LDFLAGS32) -T kernel.ld -Wl,-Map=$(BINDIR)/kernel.map $(BINDIR)/kernel.o $(BINDIR)/wrappers.o -o $(BINDIR)/kernel.bin
 
 always:
 	mkdir --parents $(BINDIR)
@@ -51,4 +53,4 @@ always:
 	rm $(BINDIR)/*.*
 
 run:
-	$(EMULATOR) -fda $(BINDIR)/$(DISK)
+	$(EMULATOR) -full-screen -fda $(BINDIR)/$(DISK)

@@ -1,0 +1,5 @@
+stage2.c isn't really bothered about syntax at the moment. It only checks for a semi-colon at the end of each option
+option format is OPTION=option
+DO NOT use OPTION = option
+
+KERNEL_FILE=/system/kernel.bin;

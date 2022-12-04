@@ -4,10 +4,13 @@
 #include "stdio.h"
 #include "memory.h"
 #include <stdint.h>
+#include "gdt.h"
 
 int __attribute__((section(".entry"))) main(uint8_t BootDrive) {
     memset(&__bss_start, 0, &__end - &__bss_start);             // clear uninitialised global variables
+    CHAR_BACKGROUND = VGA_COLOUR_GREY;
+    CHAR_FOREGROUND = VGA_COLOUR_BLUE;
     ClrScr();
-    printf("CoolOS Kernel booted from drive 0%xh\n", BootDrive);
-    for(;;);
+    printf("CoolOS Kernel v0.0.01 booted from drive 0%xh\n", BootDrive);
+    for(;;);            // don't return to stage2.bin
 }
