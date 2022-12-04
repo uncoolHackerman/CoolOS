@@ -2,7 +2,7 @@
 
 ## stage2.bin v0.0.06 (04/12/2022)
 
-- changed the heap to start from the end of the program rather than at 0x7C00
+- changed the heap to start from the end of the program rather than at 0x7E00
 - added string functions
   - char*strchr(char*str, char chr)
   - uint32_t strlen(char* str)
