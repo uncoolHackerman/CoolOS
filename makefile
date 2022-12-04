@@ -14,7 +14,7 @@ SRCDIR=src
 BINDIR=bin
 
 # end the branch string with an underscore unless it is empty
-VERSION=0.0.05
+VERSION=0.0.06
 BRANCH=
 PLATFORM=x86
 DISK=CoolOS_v$(VERSION)_$(BRANCH)$(PLATFORM).img
