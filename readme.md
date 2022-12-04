@@ -1,5 +1,16 @@
 # Changelogs
 
+## stage2.bin v0.0.06 (04/12/2022)
+
+- changed the heap to start from the end of the program rather than at 0x7C00
+- added string functions
+  - char*strchr(char*str, char chr)
+  - uint32_t strlen(char* str)
+  - char ToUpper(char c)
+- allowed FindFile() to parse 8.3 file names
+- stage2.bin will now load the kernel file "/system/kernel.bin"
+- changed CHAR_COLOUR to a variable rather than a preprocessor constant
+
 ## stage2.bin v0.0.05 (03/12/2022)
 
 - added FAT functions

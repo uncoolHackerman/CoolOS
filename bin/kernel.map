@@ -1,0 +1,63 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD bin/kernel.o
+                0x0000000000020000                phys = 0x20000
+                0x0000000000020000                . = phys
+
+.entry          0x0000000000020000       0x87
+                0x0000000000020000                __entry_start = .
+ *(.entry)
+ .entry         0x0000000000020000       0x87 bin/kernel.o
+                0x0000000000020000                main
+
+.text           0x0000000000020090      0x576
+                0x0000000000020090                __text_start = .
+ *(.text)
+ .text          0x0000000000020090      0x576 bin/kernel.o
+                0x0000000000020090                memcmp
+                0x00000000000200e0                memcpy
+                0x0000000000020120                memset
+                0x0000000000020150                malloc
+                0x00000000000201a0                free
+                0x00000000000201e0                putc
+                0x00000000000202c0                ClrScr
+                0x0000000000020300                puts
+                0x0000000000020340                putnum
+                0x0000000000020400                printf
+                0x0000000000020590                ScrollScreen
+
+.data           0x0000000000020608       0x12
+                0x000000000002061c                __data_start = .
+ *(.data)
+ .data          0x0000000000020608       0x12 bin/kernel.o
+                0x0000000000020608                g_Hex
+                0x0000000000020619                CHAR_COLOUR
+
+.rodata         0x000000000002061c       0x58
+                0x000000000002061c                __data_start = .
+ *(.rodata)
+ .rodata        0x000000000002061c       0x58 bin/kernel.o
+
+.rodata.str1.4  0x0000000000020674       0x26
+ .rodata.str1.4
+                0x0000000000020674       0x26 bin/kernel.o
+
+.bss            0x00000000000206a0      0x41c
+                0x00000000000206a0                __bss_start = .
+ *(.bss)
+ .bss           0x00000000000206a0      0x41c bin/kernel.o
+                0x00000000000206a0                CursorY
+                0x00000000000206a4                CursorX
+                0x00000000000206a8                MallocIndex
+                0x00000000000206ac                MallocTableSize
+                0x0000000000020abc                __end = .
+OUTPUT(bin/kernel.bin binary)
+
+.comment        0x0000000000000000       0x13
+ .comment       0x0000000000000000       0x13 bin/kernel.o

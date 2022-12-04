@@ -19,16 +19,19 @@ BRANCH=
 PLATFORM=x86
 DISK=CoolOS_v$(VERSION)_$(BRANCH)$(PLATFORM).img
 
-default: always bootloader
+default: always bootloader kernel
 	dd if=/dev/zero of=$(BINDIR)/$(DISK) bs=512 count=2880
 	dd if=$(BINDIR)/boot.bin of=$(BINDIR)/$(DISK) conv=notrunc
 	mmd -i $(BINDIR)/$(DISK) user
 	mmd -i $(BINDIR)/$(DISK) src
+	mmd -i $(BINDIR)/$(DISK) system
+	mmd -i $(BINDIR)/$(DISK) src/kernel
 	mcopy -i $(BINDIR)/$(DISK) notes.txt "::/user/notes.txt"
-	mcopy -i $(BINDIR)/$(DISK) $(SRCDIR)/bootloader/boot.asm "::/src/boot.asm"
+	mcopy -i $(BINDIR)/$(DISK) $(SRCDIR)/bootloader/*.* "::/src/"
 	mcopy -i $(BINDIR)/$(DISK) $(BINDIR)/stage2.bin "::/stage2.bin"
-	mcopy -i $(BINDIR)/$(DISK) $(SRCDIR)/bootloader/stage2/stage2.asm "::/src/stage2.asm"
-	mcopy -i $(BINDIR)/$(DISK) $(SRCDIR)/bootloader/stage2/stage2.c "::/src/stage2.c"
+	mcopy -i $(BINDIR)/$(DISK) $(SRCDIR)/bootloader/stage2/*.* "::/src/"
+	mcopy -i $(BINDIR)/$(DISK) $(SRCDIR)/kernel/*.* "::/src/kernel/"
+	mcopy -i $(BINDIR)/$(DISK) $(BINDIR)/*.bin "::/system/"
 	rm $(BINDIR)/*.bin
 	rm $(BINDIR)/*.o
 
@@ -37,6 +40,10 @@ bootloader:
 	$(ASM) -f elf -o $(BINDIR)/stage2.o $(SRCDIR)/bootloader/stage2/stage2.asm
 	$(CC32) $(CFLAGS32) $(SRCDIR)/bootloader/stage2/stage2.c -o $(BINDIR)/stage2a.o
 	$(LD32) $(LDFLAGS32) -T linker.ld -Wl,-Map=$(BINDIR)/stage2.map $(BINDIR)/stage2.o $(BINDIR)/stage2a.o -o $(BINDIR)/stage2.bin $(CLIBS32)
+
+kernel:
+	$(CC32) $(CFLAGS32) $(SRCDIR)/kernel/kernel.c -o $(BINDIR)/kernel.o
+	$(LD32) $(LDFLAGS32) -T kernel.ld -Wl,-Map=$(BINDIR)/kernel.map $(BINDIR)/kernel.o -o $(BINDIR)/kernel.bin
 
 always:
 	mkdir --parents $(BINDIR)

@@ -16,18 +16,18 @@ LOAD /usr/local/i686-elf-gcc/lib/gcc/i686-elf/11.3.0/libgcc.a
                 0x0000000000000500                __entry_start = .
  *(.entry)
 
-.text           0x0000000000000500      0xd14
+.text           0x0000000000000500      0xe24
                 0x0000000000000500                __text_start = .
  *(.text)
- .text          0x0000000000000500      0x226 bin/stage2.o
+ .text          0x0000000000000500      0x230 bin/stage2.o
                 0x0000000000000500                entry
-                0x0000000000000585                inb
-                0x0000000000000592                outb
-                0x00000000000005a0                BIOS_ReadSectors
-                0x000000000000061d                BIOS_GetDriveParameters
-                0x00000000000006da                BIOS_ResetDisk
- *fill*         0x0000000000000726        0xa 
- .text          0x0000000000000730      0xae4 bin/stage2a.o
+                0x000000000000055d                g_HeapStart
+                0x000000000000058f                inb
+                0x000000000000059c                outb
+                0x00000000000005aa                BIOS_ReadSectors
+                0x0000000000000627                BIOS_GetDriveParameters
+                0x00000000000006e4                BIOS_ResetDisk
+ .text          0x0000000000000730      0xbf4 bin/stage2a.o
                 0x0000000000000730                memcmp
                 0x0000000000000780                memcpy
                 0x00000000000007c0                memset
@@ -46,48 +46,53 @@ LOAD /usr/local/i686-elf-gcc/lib/gcc/i686-elf/11.3.0/libgcc.a
                 0x0000000000000d40                ReadSectors
                 0x0000000000000de0                LBA2CHS
                 0x0000000000000e20                DiskInitialise
-                0x0000000000000ea0                ReadBootRecord
-                0x0000000000000ec0                ReadRootDirectory
-                0x0000000000000f20                FindFile
-                0x0000000000000fa0                ReadFile
-                0x0000000000001040                Cluster2LBA
-                0x0000000000001060                ReadFat
-                0x0000000000001090                FatInitialise
+                0x0000000000000ea0                strchr
+                0x0000000000000ef0                strlen
+                0x0000000000000f10                ToUpper
+                0x0000000000000f30                ToLower
+                0x0000000000000f50                ReadBootRecord
+                0x0000000000000f70                ReadRootDirectory
+                0x0000000000000fd0                FindFile
+                0x0000000000001140                ReadFile
+                0x00000000000011e0                Cluster2LBA
+                0x0000000000001200                ReadFat
+                0x0000000000001230                FatInitialise
 
-.text.startup   0x0000000000001220      0x22c
- .text.startup  0x0000000000001220      0x22c bin/stage2a.o
-                0x0000000000001220                main
+.text.startup   0x0000000000001330      0x1d6
+ .text.startup  0x0000000000001330      0x1d6 bin/stage2a.o
+                0x0000000000001330                main
 
-.data           0x000000000000144c       0x15
-                0x0000000000001464                __data_start = .
+.data           0x0000000000001508       0x16
+                0x0000000000001520                __data_start = .
  *(.data)
- .data          0x000000000000144c       0x15 bin/stage2a.o
-                0x000000000000144c                g_DataSectionLBA
-                0x0000000000001450                g_Hex
+ .data          0x0000000000001508       0x16 bin/stage2a.o
+                0x0000000000001508                g_DataSectionLBA
+                0x000000000000150c                g_Hex
+                0x000000000000151d                CHAR_COLOUR
 
-.rodata         0x0000000000001464       0x58
-                0x0000000000001464                __data_start = .
+.rodata         0x0000000000001520       0x58
+                0x0000000000001520                __data_start = .
  *(.rodata)
- .rodata        0x0000000000001464       0x58 bin/stage2a.o
+ .rodata        0x0000000000001520       0x58 bin/stage2a.o
 
-.rodata.str1.4  0x00000000000014bc       0xb6
+.rodata.str1.4  0x0000000000001578      0x114
  .rodata.str1.4
-                0x00000000000014bc       0xb6 bin/stage2a.o
+                0x0000000000001578      0x114 bin/stage2a.o
 
-.rodata.str1.1  0x0000000000001572       0x9a
+.rodata.str1.1  0x000000000000168c       0xcc
  .rodata.str1.1
-                0x0000000000001572       0x9a bin/stage2a.o
+                0x000000000000168c       0xcc bin/stage2a.o
 
-.bss            0x0000000000001620      0x61c
-                0x0000000000001620                __bss_start = .
+.bss            0x0000000000001760      0x61c
+                0x0000000000001760                __bss_start = .
  *(.bss)
- .bss           0x0000000000001620      0x61c bin/stage2a.o
-                0x0000000000001620                g_CurrentDirectory
-                0x0000000000001624                CursorY
-                0x0000000000001628                CursorX
-                0x000000000000162c                MallocIndex
-                0x0000000000001630                MallocTableSize
-                0x0000000000001c3c                __end = .
+ .bss           0x0000000000001760      0x61c bin/stage2a.o
+                0x0000000000001760                g_CurrentDirectory
+                0x0000000000001764                CursorY
+                0x0000000000001768                CursorX
+                0x000000000000176c                MallocIndex
+                0x0000000000001770                MallocTableSize
+                0x0000000000001d7c                __end = .
 OUTPUT(bin/stage2.bin binary)
 
 .comment        0x0000000000000000       0x13

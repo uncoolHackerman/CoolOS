@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include "disk.h"
 #include "memory.h"
+#include "string.h"
 
 /*
 To-do:
@@ -89,14 +90,25 @@ bool ReadRootDirectory(DISK* disk, uint8_t Drive, void* BufferOut)
     return ReadSectors(disk, Drive, RootDirectoryLBA, RootDirectorySectors, BufferOut);
 }
 
-DirectoryEntry* FindFile(DirectoryEntry* Dir, char* Name)
-{
-    for(int i = 0; i < g_FatData.BootSect.u_BootSector.RootDirEntries; i++)
-    {
-        if(memcmp(Name, Dir[i].Name, 11))
+DirectoryEntry* FindFile(DirectoryEntry* Dir, char* Name) {
+    char FatName[12] = "           ";
+    char* extension = strchr(Name, '.');
+    if(extension && *extension != 0) {
+        *extension = 0;
+        extension++;            // ignore the .
+        for(int i = 0; i < strlen(extension); i++)
+            FatName[i + 8] = ToUpper(extension[i]);
+    }
+    for(int i = 0; i < strlen(Name); i++) {
+        if(!Name[i] || i >= 11) break;
+        FatName[i] = ToUpper(Name[i]);
+    }
+    for(int i = 0; i < g_FatData.BootSect.u_BootSector.RootDirEntries; i++) {
+        if(Dir[i].Name[0] == '\0') break;
+        if(memcmp(Dir[i].Name, FatName, 11))
         return &Dir[i];
     }
-    return 0;
+    return NULL;
 }
 
 bool ReadFile(DISK* disk, uint8_t Drive, DirectoryEntry* file, void* BufferOut)

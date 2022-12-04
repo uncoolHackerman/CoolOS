@@ -8,42 +8,42 @@
 #include "disk.h"
 #include "FAT.h"
 
-/*
-To-do:
-- Load the kernel
-*/
+#define KERNEL_START (void*)0x20000             // chosen arbitrarily but it works
 
 void main(const uint8_t BootDrive)
 {
+    ///*
     DISK disk;
     ClrScr();
-    printf("COOLBOOT Stage2 v0.0.05 Booted from drive: 0%xh\n", BootDrive);
+    printf("COOLBOOT Stage2 v0.0.06 Booted from drive: 0%xh\n", BootDrive);
     printf("Enabling A20 line\n");
     EnableA20();
     printf("Initialising disk 0%xh\n", BootDrive);
-    if(!DiskInitialise(&disk, BootDrive)) return;
+    DiskInitialise(&disk, BootDrive);
     printf("Disk 0%xh: %u Tracks, %u Sides, %u Sectors Per Track\n", BootDrive, disk.Cylinders, disk.Heads, disk.SectorsPerCylinder);
     printf("Initialising FAT\n");
     FatInitialise(&disk, BootDrive);
-    DirectoryEntry* fd = FindFile(g_CurrentDirectory, "SRC        ");
+    printf("Root address: 0x%x\n", g_CurrentDirectory);
+    printf("Fat address: 0x%x\n", g_FAT);
+    printf("Loading Kernel\n");
+    DirectoryEntry* fd = FindFile(g_CurrentDirectory, "system");
     if(!fd) {
-        printf("Could not find directory\n");
+        printf("System Directory not found\n");
         return;
     }
     DirectoryEntry* DirectoryBuffer = (DirectoryEntry*)malloc(g_FatData.BootSect.u_BootSector.RootDirEntries * sizeof(DirectoryEntry));
     ReadFile(&disk, BootDrive, fd, DirectoryBuffer);
-    printf("contents of %s:\n", fd->Name);
-    for(int i = 0; i < g_FatData.BootSect.u_BootSector.RootDirEntries; i++)
-    {
-        if(DirectoryBuffer[i].Name[0] == '\0') break;
-        puts("  ");
-        puts(DirectoryBuffer[i].Attributes & 0x10 ?  "<DIR> ": "<FILE> ");
-        for(int j = 0; j < 11; j++)
-        {
-            if(j == 8) putc(DirectoryBuffer[i].Attributes & 0x10 ? 0 : '.');
-            if(DirectoryBuffer[i].Name[j] != ' ') putc(DirectoryBuffer[i].Name[j]);
-        }
-        putc('\n');
+    fd = FindFile(DirectoryBuffer, "kernel.bin");
+    if(!fd) {
+        printf("kernel.bin not found\n");
+        return;
     }
+    ReadFile(&disk, BootDrive, fd, KERNEL_START);
+    int (*StartKernel)(uint8_t) = KERNEL_START;
+    int ErrCode = StartKernel(BootDrive);
+    ClrScr();
+    CHAR_COLOUR = 0xF4;
+    printf("FATAL: kernel program terminated with status %i\n", ErrCode);
+    printf("See documentation for more information\n");
     return;
 }

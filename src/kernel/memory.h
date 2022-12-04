@@ -54,15 +54,16 @@ uint8_t MallocIndex = 0;
 #define FREE_MEM_START (void*)0x7E00
 #define NULL (void*)0
 
-extern void* g_HeapStart;
+extern uint8_t __bss_start;
+extern uint8_t __end;
 
 // not a very good way of doing it
 void* malloc(uint32_t size) {
-    memset(g_HeapStart + MallocTableSize, 0, size);
+    memset(&__end + MallocTableSize, 0, size);
     MallocTable[MallocIndex] = size;
     MallocTableSize += size;
     MallocIndex++;
-    return g_HeapStart + MallocTableSize - size;
+    return &__end + MallocTableSize - size;
 }
 
 // takes pointer to last malloced pointer (e.g. &pointer)

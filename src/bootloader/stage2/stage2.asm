@@ -34,6 +34,7 @@ entry:
         mov ebp, esp
         mov edi, __bss_start    ; clear uninitialised variables 
         mov ecx, __end
+        mov dword [g_HeapStart], ecx
         sub ecx, edi
         mov al, 0
         cld
@@ -46,6 +47,8 @@ entry:
 
 [bits 16]
 g_BootDrive: db 0
+[global g_HeapStart]
+g_HeapStart: dd 0
 
 GDT:
     .Null:
