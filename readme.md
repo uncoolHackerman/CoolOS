@@ -5,7 +5,7 @@
 - added printf support for pointers
 - added GDT definitions, although they are yet to be used in the kernel
 
-## stage2.bin v0.0.07 (05/12/2022)
+## stage2.bin v0.0.07 (04/12/2022)
 
 - changed hardcoded kernel.bin path to one that can be specified in a new file named "/coolboot.sys"
 - added a function to open a directory path
