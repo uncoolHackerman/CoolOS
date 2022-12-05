@@ -23,6 +23,13 @@ bool InitialiseConfig(DISK* disk, uint8_t Drive) {
 
 char* GetOption(char* option) {
     char* OPTION = strstr(g_COOLBOOTSYS, option);
+    while(*(OPTION - strlen(option) - 1) != ':') {
+        OPTION = strstr(OPTION, option);
+        if(!OPTION || *OPTION != '=') {
+        printf("Could not find option %s\n", option);
+        return NULL;
+    }
+    }
     if(!OPTION || *OPTION != '=') {
         printf("Could not find option %s\n", option);
         return NULL;

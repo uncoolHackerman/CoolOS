@@ -10,7 +10,7 @@
 #include "config.h"
 
 #define KERNEL_START (void*)0x20000             // chosen arbitrarily but it works
-#define CONFIG_SIGN "CB23110412v0.0.08"
+#define CONFIG_SIGN "CB23110512v0.0.09"
 
 void main(const uint8_t BootDrive)
 {

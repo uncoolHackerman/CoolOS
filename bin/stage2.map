@@ -16,7 +16,7 @@ LOAD /usr/local/i686-elf-gcc/lib/gcc/i686-elf/11.3.0/libgcc.a
                 0x0000000000000500                __entry_start = .
  *(.entry)
 
-.text           0x0000000000000500     0x1095
+.text           0x0000000000000500     0x10e0
                 0x0000000000000500                __text_start = .
  *(.text)
  .text          0x0000000000000500      0x230 bin/stage2.o
@@ -27,7 +27,7 @@ LOAD /usr/local/i686-elf-gcc/lib/gcc/i686-elf/11.3.0/libgcc.a
                 0x00000000000005aa                BIOS_ReadSectors
                 0x0000000000000627                BIOS_GetDriveParameters
                 0x00000000000006e4                BIOS_ResetDisk
- .text          0x0000000000000730      0xe65 bin/stage2a.o
+ .text          0x0000000000000730      0xeb0 bin/stage2a.o
                 0x0000000000000730                memcmp
                 0x0000000000000780                memcpy
                 0x00000000000007c0                memset
@@ -62,42 +62,42 @@ LOAD /usr/local/i686-elf-gcc/lib/gcc/i686-elf/11.3.0/libgcc.a
                 0x00000000000014a0                InitialiseConfig
                 0x0000000000001510                GetOption
 
-.text.startup   0x00000000000015a0      0x274
- .text.startup  0x00000000000015a0      0x274 bin/stage2a.o
-                0x00000000000015a0                main
+.text.startup   0x00000000000015e0      0x274
+ .text.startup  0x00000000000015e0      0x274 bin/stage2a.o
+                0x00000000000015e0                main
 
-.data           0x0000000000001814       0x16
-                0x000000000000182c                __data_start = .
+.data           0x0000000000001854       0x16
+                0x000000000000186c                __data_start = .
  *(.data)
- .data          0x0000000000001814       0x16 bin/stage2a.o
-                0x0000000000001814                g_DataSectionLBA
-                0x0000000000001818                g_Hex
-                0x0000000000001829                CHAR_COLOUR
+ .data          0x0000000000001854       0x16 bin/stage2a.o
+                0x0000000000001854                g_DataSectionLBA
+                0x0000000000001858                g_Hex
+                0x0000000000001869                CHAR_COLOUR
 
-.rodata         0x000000000000182c       0x58
-                0x000000000000182c                __data_start = .
+.rodata         0x000000000000186c       0x58
+                0x000000000000186c                __data_start = .
  *(.rodata)
- .rodata        0x000000000000182c       0x58 bin/stage2a.o
+ .rodata        0x000000000000186c       0x58 bin/stage2a.o
 
-.rodata.str1.4  0x0000000000001884      0x1e8
+.rodata.str1.4  0x00000000000018c4      0x1e8
  .rodata.str1.4
-                0x0000000000001884      0x1e8 bin/stage2a.o
+                0x00000000000018c4      0x1e8 bin/stage2a.o
 
-.rodata.str1.1  0x0000000000001a6c       0xe5
+.rodata.str1.1  0x0000000000001aac       0xe5
  .rodata.str1.1
-                0x0000000000001a6c       0xe5 bin/stage2a.o
+                0x0000000000001aac       0xe5 bin/stage2a.o
 
-.bss            0x0000000000001b60      0x61c
-                0x0000000000001b60                __bss_start = .
+.bss            0x0000000000001ba0      0x61c
+                0x0000000000001ba0                __bss_start = .
  *(.bss)
- .bss           0x0000000000001b60      0x61c bin/stage2a.o
-                0x0000000000001b60                g_COOLBOOTSYS
-                0x0000000000001b64                g_CurrentDirectory
-                0x0000000000001b68                CursorY
-                0x0000000000001b6c                CursorX
-                0x0000000000001b70                MallocIndex
-                0x0000000000001b74                MallocTableSize
-                0x000000000000217c                __end = .
+ .bss           0x0000000000001ba0      0x61c bin/stage2a.o
+                0x0000000000001ba0                g_COOLBOOTSYS
+                0x0000000000001ba4                g_CurrentDirectory
+                0x0000000000001ba8                CursorY
+                0x0000000000001bac                CursorX
+                0x0000000000001bb0                MallocIndex
+                0x0000000000001bb4                MallocTableSize
+                0x00000000000021bc                __end = .
 OUTPUT(bin/stage2.bin binary)
 
 .comment        0x0000000000000000       0x13
