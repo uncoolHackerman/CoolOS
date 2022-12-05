@@ -14,7 +14,7 @@ SRCDIR=src
 BINDIR=bin
 
 # end the branch string with an underscore unless it is empty
-VERSION=0.0.07
+VERSION=0.0.08
 BRANCH=
 PLATFORM=x86
 DISK=CoolOS_v$(VERSION)_$(BRANCH)$(PLATFORM).img
@@ -53,4 +53,4 @@ always:
 	rm $(BINDIR)/*.*
 
 run:
-	$(EMULATOR) -full-screen -fda $(BINDIR)/$(DISK)
+	$(EMULATOR) -fda $(BINDIR)/$(DISK)

@@ -1,14 +1,19 @@
 # Changelogs (dates in DD/MM/YYYY format)
 
-## kernel.bin v0.0.01 (04/12/2022)
+## stage2.bin v0.0.08 (04/12/2022)
 
-- added printf support for pointers
-- added GDT definitions, although they are yet to be used in the kernel
+- coolboot.sys must now have a valid signature to make sure there aren't any formatting issues when the syntax inevitably changes, valid signatures for each version will be placed in the docs directory
+- added some functions to parse coolboot.sys
 
 ## stage2.bin v0.0.07 (04/12/2022)
 
 - changed hardcoded kernel.bin path to one that can be specified in a new file named "/coolboot.sys"
 - added a function to open a directory path
+
+## kernel.bin v0.0.01 (04/12/2022)
+
+- added printf support for pointers
+- added GDT definitions, although they are yet to be used in the kernel
 
 ## stage2.bin v0.0.06 (04/12/2022)
 

@@ -7,14 +7,16 @@
 #include "A20.h"
 #include "disk.h"
 #include "FAT.h"
+#include "config.h"
 
 #define KERNEL_START (void*)0x20000             // chosen arbitrarily but it works
+#define CONFIG_SIGN "CB23110412v0.0.08"
 
 void main(const uint8_t BootDrive)
 {
     DISK disk;
     ClrScr();
-    printf("COOLBOOT Stage2 v0.0.07 Booted from drive: 0%xh\n", BootDrive);
+    printf("COOLBOOT Stage2 v0.0.08 Booted from drive: 0%xh\n", BootDrive);
     printf("Enabling A20 line\n");
     EnableA20();
     printf("Initialising disk 0%xh\n", BootDrive);
@@ -24,25 +26,16 @@ void main(const uint8_t BootDrive)
     FatInitialise(&disk, BootDrive);
     printf("Root address: 0x%x\n", g_CurrentDirectory);
     printf("Fat address: 0x%x\n", g_FAT);
-    DirectoryEntry* fd = FindFile(g_CurrentDirectory, "coolboot.sys");
-    if(!fd) {
-        printf("Could not find configuration file \"/coolboot.sys\"");
+    InitialiseConfig(&disk, BootDrive);
+    char* SIGNATURE = GetOption("SIGNATURE");
+    if(!SIGNATURE) return;
+    if(!memcmp(SIGNATURE, CONFIG_SIGN, strlen(SIGNATURE))) {
+        printf("coolboot.sys signature is not valid\n");
+        printf("see documentation for more information\n");
         return;
     }
-    char* Buffer = malloc(fd->Size + 512);
-    ReadFile(&disk, BootDrive, fd, Buffer);
-    char* KERNEL_FILE = strstr(Buffer, "KERNEL_FILE=");
-    char* endl = strchr(KERNEL_FILE, ';');
-    if(!endl) {
-        printf("Syntax error\n");
-        return;
-    }
-    *endl = 0;
-    if(!KERNEL_FILE) {
-        printf("There is no KERNEL_FILE option in the configuration file\n");
-        return;
-    }
-    free((void**)&Buffer);
+    char* KERNEL_FILE = GetOption("KERNEL_FILE");
+    if(!KERNEL_FILE) return;
     char* KERNEL_FILE_NEXT = KERNEL_FILE;
     char* KERNEL_FILE_FINAL = KERNEL_FILE;
     for(;;) {
@@ -58,7 +51,7 @@ void main(const uint8_t BootDrive)
         printf("Could not find kernel directory, please update coolboot.sys\n");
         return;
     }
-    fd = FindFile(g_CurrentDirectory, KERNEL_FILE_FINAL);
+    DirectoryEntry* fd = FindFile(g_CurrentDirectory, KERNEL_FILE_FINAL);
     if(!fd) {
         printf("Could not find kernel file\n");
         return;

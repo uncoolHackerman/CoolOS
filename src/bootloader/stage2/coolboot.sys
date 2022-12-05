@@ -1,5 +1,7 @@
-stage2.c isn't really bothered about syntax at the moment. It only checks for a semi-colon at the end of each option
+stage2.c isn't really bothered about syntax at the moment. It only checks for a semi-colon at the end of the option it's viewing
 option format is OPTION=option;
 DO NOT use OPTION = option;
+any string which isn't an option name is a comment
 
 KERNEL_FILE=/system/kernel.bin;
+SIGNATURE=CB23110412v0.0.08;        lets stage2 know that the config file is in the right format for the coolboot version it's being used on
