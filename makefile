@@ -14,7 +14,7 @@ SRCDIR=src
 BINDIR=bin
 
 # end the branch string with an underscore unless it is empty
-VERSION=0.0.09
+VERSION=0.0.1
 BRANCH=
 PLATFORM=x86
 DISK=CoolOS_v$(VERSION)_$(BRANCH)$(PLATFORM).img
@@ -24,14 +24,15 @@ default: always bootloader kernel
 	dd if=$(BINDIR)/boot.bin of=$(BINDIR)/$(DISK) conv=notrunc
 	mmd -i $(BINDIR)/$(DISK) user
 	mmd -i $(BINDIR)/$(DISK) src
-	mmd -i $(BINDIR)/$(DISK) system
+	mmd -i $(BINDIR)/$(DISK) coolos
+	mmd -i $(BINDIR)/$(DISK) coolos/system
 	mmd -i $(BINDIR)/$(DISK) src/kernel
 	mcopy -i $(BINDIR)/$(DISK) notes.txt "::/user/notes.txt"
 	mcopy -i $(BINDIR)/$(DISK) $(SRCDIR)/bootloader/*.* "::/src/"
 	mcopy -i $(BINDIR)/$(DISK) $(BINDIR)/stage2.bin "::/stage2.bin"
 	mcopy -i $(BINDIR)/$(DISK) $(SRCDIR)/bootloader/stage2/*.* "::/src/"
 	mcopy -i $(BINDIR)/$(DISK) $(SRCDIR)/kernel/*.* "::/src/kernel/"
-	mcopy -i $(BINDIR)/$(DISK) $(BINDIR)/*.bin "::/system/"
+	mcopy -i $(BINDIR)/$(DISK) $(BINDIR)/*.bin "::/CoolOS/system"
 	mcopy -i $(BINDIR)/$(DISK) $(SRCDIR)/bootloader/stage2/coolboot.sys "::/coolboot.sys"
 	rm $(BINDIR)/*.bin
 	rm $(BINDIR)/*.o

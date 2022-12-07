@@ -1,1 +1,4 @@
-COOLBOOT v0.0.08+ = CB23110412v0.0.08
+COOLBOOT v0.0.01 - v0.0.06 don't have a coolboot.sys file
+COOLBOOT v0.0.07 doesn't require a signature to be present
+COOLBOOT v0.0.08 = CB23110412v0.0.08
+COOLBOOT v0.0.09+ = CB23110512v0.0.09

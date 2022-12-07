@@ -16,7 +16,7 @@ void main(const uint8_t BootDrive)
 {
     DISK disk;
     ClrScr();
-    printf("COOLBOOT Stage2 v0.0.08 Booted from drive: 0%xh\n", BootDrive);
+    printf("COOLBOOT Stage2 v0.0.1 Booted from drive: 0%xh\n", BootDrive);
     printf("Enabling A20 line\n");
     EnableA20();
     printf("Initialising disk 0%xh\n", BootDrive);
@@ -38,10 +38,12 @@ void main(const uint8_t BootDrive)
     if(!KERNEL_FILE) return;
     char* KERNEL_FILE_NEXT = KERNEL_FILE;
     char* KERNEL_FILE_FINAL = KERNEL_FILE;
+    char tmpf;
     for(;;) {
         KERNEL_FILE_NEXT = strchr(KERNEL_FILE_FINAL, '/');
         if(!KERNEL_FILE_NEXT) {
-            *(KERNEL_FILE_FINAL - 1) = 0;
+            tmpf = *KERNEL_FILE_FINAL;
+            *KERNEL_FILE_FINAL = 0;
             break;
         }
         KERNEL_FILE_NEXT++;
@@ -51,6 +53,8 @@ void main(const uint8_t BootDrive)
         printf("Could not find kernel directory, please update coolboot.sys\n");
         return;
     }
+    *KERNEL_FILE_FINAL = tmpf;
+    printf("%s\n", KERNEL_FILE_FINAL);
     DirectoryEntry* fd = FindFile(g_CurrentDirectory, KERNEL_FILE_FINAL);
     if(!fd) {
         printf("Could not find kernel file\n");

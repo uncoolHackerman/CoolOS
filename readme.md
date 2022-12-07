@@ -1,5 +1,9 @@
 # Changelogs (dates in DD/MM/YYYY format)
 
+## stage2.bin v0.0.1 (06/12/2022)
+
+- fixed a bug where KERNEL_FILE would have to start with a double slash for files in the root directory.
+
 ## stage2.bin v0.0.09 (05/12/2022)
 
 - options must now start with a ':' prefix

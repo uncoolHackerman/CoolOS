@@ -51,7 +51,6 @@ void memset(void* dst, uint8_t val, uint32_t count) {
 static uint32_t MallocTable[255] = {0};
 uint32_t MallocTableSize = 0;
 uint8_t MallocIndex = 0;
-#define FREE_MEM_START (void*)0x7E00
 #define NULL ((void*)0)
 
 extern void* g_HeapStart;
