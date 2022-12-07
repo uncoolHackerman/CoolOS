@@ -1,3 +1,2 @@
-bin/
-.vscode/
-tools/
+/bin
+/tools
