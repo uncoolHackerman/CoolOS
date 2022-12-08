@@ -1,0 +1,6 @@
+stage2.c isn't really bothered about syntax at the moment. It only checks for a semi-colon at the end of the option it's viewing and a colon at the start
+option format is :OPTION=option;
+DO NOT use :OPTION = option;
+any string which isn't an option name is a comment
+
+:SIGNATURE=CB23110512v0.0.09;        lets stage2 know that the config file is in the right format for the coolboot version it's being used on

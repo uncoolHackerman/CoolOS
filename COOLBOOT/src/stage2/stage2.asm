@@ -205,15 +205,15 @@ BIOS_GetDriveParameters:
     mov bl, ch
     mov bh, cl
     shr bh, 6
-    inc bx
+    inc bx                              ; Cylinders = bx
     LinearToSegment [bp + 16], es, esi, si
     mov word [es:si], bx
     xor ch, ch
-    and cl, 0x3F
+    and cl, 0x3F                        ; Sectors per Track = cx
     LinearToSegment [bp + 24], es, esi, si
     mov word [es:si], cx
     mov cl, dh
-    inc cx
+    inc cx                              ; Heads = cx
     LinearToSegment [bp + 20], es, esi, si
     mov word [es:si], cx
     pop bx

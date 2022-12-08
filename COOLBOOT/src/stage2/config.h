@@ -13,7 +13,7 @@ char* g_COOLBOOTSYS = NULL;
 bool InitialiseConfig(DISK* disk, uint8_t Drive) {
     DirectoryEntry* fd = FindFile(g_CurrentDirectory, "coolboot.sys");
     if(!fd) {
-        printf("Could not find configuration file \"/coolboot.sys\"");
+        printf("Could not find configuration file \"/coolboot.sys\"\n");
         return false;
     }
     g_COOLBOOTSYS = (char*)malloc(fd->Size + 512);

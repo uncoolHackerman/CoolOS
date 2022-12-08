@@ -115,37 +115,57 @@ Cluster2LBA:
     pop dx
     ret
 
-MSG_Loading: db "COOLBOOT v0.0.02", 0x0A, 0x0D, 0
-g_File: db "STAGE2  BIN"
+MSG_Loading: db "COOLBOOT v0.0.03", 0x0A, 0x0D, 0
+g_File: db "STAGE2  BIN"                    ; DirectoryEntry* g_File
 ;_File: db "123456789AB"
 g_DataSectionLBA: dw 0
 
 main:
     mov byte [ebr_DriveNumber], dl
+    xor di, di                              ; es:di = 0x0000:0x0000
+    mov es, di
+    mov dl, [ebr_DriveNumber]               ; dl = drive
+    mov ah, 0x08                            ; get drive parameters
+    stc
+    int 0x13                                ; BIOS disk functions
+    jc ReadSectors.fail
+    xor ch, ch
+    and cl, 0x3F
+    mov word [bpb_SectorsPerTrack], cx      ; cx = Sectors per Track
+    mov dl, dh
+    xor dh, dh
+    inc dx
+    mov word [bpb_HeadCount], dx
+    xor di, di
+    mov es, di
     mov si, MSG_Loading
     call puts
     .ReadRootDirectory:
-        mov al, [bpb_FatCount]
+        xor ax, ax
+        mov al, [bpb_FatCount]              ; ax = FatCount
         mul word [bpb_SectorsPerFAT]
         add ax, [bpb_ReservedSectors]       ; ax = RootDirectoryLBA
         push ax
-        mov ax, 32
-        mul word [bpb_RootDirEntries]
+        mov ax, 32                          ; ax = sizeof(DirectoryEntry)
+        mul word [bpb_RootDirEntries]       ; ax = RootDirSize
         add ax, 511
+        xor dx, dx
         div word [bpb_BytesPerSector]       ; ax = RootDirectorySectors
         mov cx, ax                          ; cl = RootDirectorySectors
         pop ax                              ; ax = RootDirectoryLBA
         mov bx, ax
-        add bx, cx
+        add bx, cx                          ; bx = DataSectionLBA
         mov word [g_DataSectionLBA], bx
+        xor bx, bx
+        mov es, bx
         mov bx, buffer                      ; es:bx = 0x0000:buffer
         mov dl, [ebr_DriveNumber]           ; dl = boot disk
         call ReadSectors
     mov si, buffer
-    mov cx, 11
     .FindFile:
         push si
-        mov di, g_File
+        mov cx, 11                          ; compare up to 11 bytes
+        mov di, g_File                      ; compare si to g_File
         repe cmpsb
         pop si
         je .FoundFile
@@ -154,7 +174,7 @@ main:
     .FoundFile:
         test si, si
         jz ReadSectors.fail
-        add si, 26              ; first cluster
+        add si, 26                          ; si = g_File.FirstClusterLow
         mov ax, [si]
         push ax
         STAGE2SEGMENT equ 0x0000

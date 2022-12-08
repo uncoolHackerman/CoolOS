@@ -10,6 +10,7 @@ CFLAGS32=-c -O2 -ffreestanding -nostdlib
 LDFLAGS32=-nostdlib
 CLIBS32=-lgcc
 
+COOLBOOTSRCDIR=COOLBOOT
 SRCDIR=src
 BINDIR=bin
 
@@ -28,20 +29,20 @@ default: always bootloader kernel
 	mmd -i $(BINDIR)/$(DISK) coolos/system
 	mmd -i $(BINDIR)/$(DISK) src/kernel
 	mcopy -i $(BINDIR)/$(DISK) notes.txt "::/user/notes.txt"
-	mcopy -i $(BINDIR)/$(DISK) $(SRCDIR)/bootloader/*.* "::/src/"
+	mcopy -i $(BINDIR)/$(DISK) $(COOLBOOTSRCDIR)/src/*.* "::/src/"
 	mcopy -i $(BINDIR)/$(DISK) $(BINDIR)/stage2.bin "::/stage2.bin"
-	mcopy -i $(BINDIR)/$(DISK) $(SRCDIR)/bootloader/stage2/*.* "::/src/"
+	mcopy -i $(BINDIR)/$(DISK) $(COOLBOOTSRCDIR)/src/stage2/*.* "::/src/"
 	mcopy -i $(BINDIR)/$(DISK) $(SRCDIR)/kernel/*.* "::/src/kernel/"
 	mcopy -i $(BINDIR)/$(DISK) $(BINDIR)/*.bin "::/CoolOS/system"
-	mcopy -i $(BINDIR)/$(DISK) $(SRCDIR)/bootloader/stage2/coolboot.sys "::/coolboot.sys"
+	mcopy -i $(BINDIR)/$(DISK) $(SRCDIR)/coolboot.sys "::/coolboot.sys"
 	rm $(BINDIR)/*.bin
 	rm $(BINDIR)/*.o
 
 bootloader:
-	$(ASM) -f bin -o $(BINDIR)/boot.bin $(SRCDIR)/bootloader/boot.asm
-	$(ASM) -f elf -o $(BINDIR)/stage2.o $(SRCDIR)/bootloader/stage2/stage2.asm
-	$(CC32) $(CFLAGS32) $(SRCDIR)/bootloader/stage2/stage2.c -o $(BINDIR)/stage2a.o
-	$(LD32) $(LDFLAGS32) -T linker.ld -Wl,-Map=$(BINDIR)/stage2.map $(BINDIR)/stage2.o $(BINDIR)/stage2a.o -o $(BINDIR)/stage2.bin $(CLIBS32)
+	$(ASM) -f bin -o $(BINDIR)/boot.bin $(COOLBOOTSRCDIR)/src/boot.asm
+	$(ASM) -f elf -o $(BINDIR)/stage2.o $(COOLBOOTSRCDIR)/src/stage2/stage2.asm
+	$(CC32) $(CFLAGS32) $(COOLBOOTSRCDIR)/src/stage2/stage2.c -o $(BINDIR)/stage2a.o
+	$(LD32) $(LDFLAGS32) -T $(COOLBOOTSRCDIR)/linker.ld -Wl,-Map=$(BINDIR)/stage2.map $(BINDIR)/stage2.o $(BINDIR)/stage2a.o -o $(BINDIR)/stage2.bin $(CLIBS32)
 
 kernel:
 	$(CC32) $(CFLAGS32) $(SRCDIR)/kernel/kernel.c -o $(BINDIR)/kernel.o
@@ -55,3 +56,10 @@ always:
 
 run:
 	$(EMULATOR) -fda $(BINDIR)/$(DISK)
+
+coolboot:
+	mkdir -p $(COOLBOOTSRCDIR)
+	rm -rf $(COOLBOOTSRCDIR)
+	git clone https://github.com/uncoolHackerman/COOLBOOT.git $(COOLBOOTSRCDIR)
+	rm -rf $(COOLBOOTSRCDIR)/.git
+	rm $(COOLBOOTSRCDIR)/makefile
