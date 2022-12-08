@@ -7,7 +7,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-char* g_COOLBOOTSYS = NULL;
+char* g_COOLBOOTSYS = (char*)NULL;
+char* g_COOLBOOTSYS_BAK = (char*)NULL;             // a very inefficient bug fix
+uint32_t g_COOLBOOTSIZE = 0;
 
 // assumes the FAT has already been initialised
 bool InitialiseConfig(DISK* disk, uint8_t Drive) {
@@ -16,29 +18,28 @@ bool InitialiseConfig(DISK* disk, uint8_t Drive) {
         printf("Could not find configuration file \"/coolboot.sys\"\n");
         return false;
     }
-    g_COOLBOOTSYS = (char*)malloc(fd->Size + 512);
+    g_COOLBOOTSIZE = fd->Size + 1024;
+    g_COOLBOOTSYS = (char*)malloc(g_COOLBOOTSIZE);
     if(!ReadFile(disk, Drive, fd, g_COOLBOOTSYS)) return false;
+    g_COOLBOOTSYS_BAK = (char*)malloc(g_COOLBOOTSIZE);
+    memcpy(g_COOLBOOTSYS_BAK, g_COOLBOOTSYS, g_COOLBOOTSIZE);
     return true;
 }
 
 char* GetOption(char* option) {
-    char* OPTION = strstr(g_COOLBOOTSYS, option);
-    while(*(OPTION - strlen(option) - 1) != ':') {
+    char* OPTION = strstr(g_COOLBOOTSYS_BAK, option);
+    while(*(OPTION - strlen(option) - 1) != ':' || *OPTION != '=') {
         OPTION = strstr(OPTION, option);
-        if(!OPTION || *OPTION != '=') {
+        if(!OPTION) {
         printf("Could not find option %s\n", option);
-        return NULL;
+        return (char*)NULL;
     }
-    }
-    if(!OPTION || *OPTION != '=') {
-        printf("Could not find option %s\n", option);
-        return NULL;
     }
     OPTION++;
     char* endl = strchr(OPTION, ';');
     if(!endl) {
         printf("Syntax error: expected ';' at end of option %s\n", option);
-        return false;
+        return (char*)NULL;
     }
     *endl = 0;
     return OPTION;

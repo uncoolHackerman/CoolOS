@@ -11,12 +11,13 @@
 
 #define KERNEL_START (void*)0x20000             // chosen arbitrarily but it works
 #define CONFIG_SIGN "CB23110512v0.0.09"
+#define KERNEL_CODE_SUCCESS 0l
 
 void main(const uint8_t BootDrive)
 {
     DISK disk;
     ClrScr();
-    printf("COOLBOOT Stage2 v0.0.1 Booted from drive: 0%xh\n", BootDrive);
+    printf("COOLBOOT Stage2 v0.0.12 Booted from drive: 0%xh\n", BootDrive);
     printf("Enabling A20 line\n");
     EnableA20();
     printf("Initialising disk 0%xh\n", BootDrive);
@@ -34,6 +35,7 @@ void main(const uint8_t BootDrive)
         printf("see documentation for more information\n");
         return;
     }
+    memcpy(g_COOLBOOTSYS_BAK, g_COOLBOOTSYS, g_COOLBOOTSIZE);   // reset the GetOption buffer
     char* KERNEL_FILE = GetOption("KERNEL_FILE");
     if(!KERNEL_FILE) return;
     char* KERNEL_FILE_NEXT = KERNEL_FILE;
@@ -54,7 +56,6 @@ void main(const uint8_t BootDrive)
         return;
     }
     *KERNEL_FILE_FINAL = tmpf;
-    printf("%s\n", KERNEL_FILE_FINAL);
     DirectoryEntry* fd = FindFile(g_CurrentDirectory, KERNEL_FILE_FINAL);
     if(!fd) {
         printf("Could not find kernel file\n");
@@ -63,8 +64,10 @@ void main(const uint8_t BootDrive)
     ReadFile(&disk, BootDrive, fd, KERNEL_START);
     int (*StartKernel)(uint8_t) = KERNEL_START;
     int ErrCode = StartKernel(BootDrive);
+    if(ErrCode == KERNEL_CODE_SUCCESS) return;
     ClrScr();
     CHAR_COLOUR = 0xF4;
+    printf("COOLBOOT stage2 v0.0.11 post-kernel environment\n");
     printf("FATAL: kernel program terminated with status 0x%x\n", ErrCode);
     printf("See documentation for more information\n");
     return;

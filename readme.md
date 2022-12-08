@@ -1,5 +1,13 @@
 # Changelogs (dates in DD/MM/YYYY format)
 
+## CoolOS_v0.0.12_x86.img (08/12/2022)
+
+- updated COOLBOOT to version 0.0.12
+
+## kernel.bin v0.0.02 (08/12/2022)
+
+- finished GDT implementation
+
 ## stage2.bin v0.0.1 (06/12/2022)
 
 - fixed a bug where KERNEL_FILE would have to start with a double slash for files in the root directory.

@@ -1,2 +1,2 @@
-:KERNEL_FILE=/CoolOS/System/kernel.bin;
 :SIGNATURE=CB23110512v0.0.09;
+:KERNEL_FILE=/CoolOS/System/kernel.bin;

@@ -1,5 +1,13 @@
 # Changelogs (dates in DD/MM/YYYY format)
 
+## stage2.bin v0.0.12 (08/12/2022)
+
+- made some huge fixes to the coolboot.sys parser although I think the parser needs a proper re-implementation
+
+## stage2.bin v0.0.11 (08/12/2022)
+
+- if the kernel returns success, then the post-kernel environment will not clear the screen and will simply return to the assembly wrapper to halt the cpu. I plan to make the kernel success code specifiable in coolboot.sys
+
 ## boot.bin v0.0.03 (07/12/2022)
 
 - boot.bin will now check the drive parameters instead of trusting the ones already in the bios parameter block

@@ -15,7 +15,7 @@ SRCDIR=src
 BINDIR=bin
 
 # end the branch string with an underscore unless it is empty
-VERSION=0.0.1
+VERSION=0.0.12
 BRANCH=
 PLATFORM=x86
 DISK=CoolOS_v$(VERSION)_$(BRANCH)$(PLATFORM).img
@@ -57,7 +57,7 @@ always:
 run:
 	$(EMULATOR) -fda $(BINDIR)/$(DISK)
 
-coolboot:
+install_coolboot:
 	mkdir -p $(COOLBOOTSRCDIR)
 	rm -rf $(COOLBOOTSRCDIR)
 	git clone https://github.com/uncoolHackerman/COOLBOOT.git $(COOLBOOTSRCDIR)
