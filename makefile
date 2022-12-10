@@ -10,15 +10,14 @@ CFLAGS32=-c -O2 -ffreestanding -nostdlib
 LDFLAGS32=-nostdlib
 CLIBS32=-lgcc
 
-COOLBOOTSRCDIR=COOLBOOT
+COOLBOOTSRCDIR=src/COOLBOOT
 SRCDIR=src
 BINDIR=bin
 
 # end the branch string with an underscore unless it is empty
-VERSION=0.0.12
-BRANCH=
+VERSION=0.0.13
 PLATFORM=x86
-DISK=CoolOS_v$(VERSION)_$(BRANCH)$(PLATFORM).img
+DISK=CoolOS_v$(VERSION)_$(PLATFORM).img
 
 default: always bootloader kernel
 	dd if=/dev/zero of=$(BINDIR)/$(DISK) bs=512 count=2880

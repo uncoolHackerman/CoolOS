@@ -56,6 +56,7 @@ uint8_t MallocIndex = 0;
 
 extern uint8_t __bss_start;
 extern uint8_t __end;
+extern uint8_t phys;
 
 // not a very good way of doing it
 void* malloc(uint32_t size) {

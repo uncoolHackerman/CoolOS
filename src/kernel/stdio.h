@@ -159,6 +159,8 @@ void printf(const char* fmt, ...)
                     case 'o':
                         putnum(va_arg(args, unsigned int), 8, 0);
                         break;
+                    case 'b':
+                        putnum(va_arg(args, unsigned int), 2, 0);
                     default:
                         break;
                 }

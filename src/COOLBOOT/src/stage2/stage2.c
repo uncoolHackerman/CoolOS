@@ -12,12 +12,13 @@
 #define KERNEL_START (void*)0x20000             // chosen arbitrarily but it works
 #define CONFIG_SIGN "CB23110512v0.0.09"
 #define KERNEL_CODE_SUCCESS 0l
+#define COOLBOOT_VER "v0.0.12"
 
 void main(const uint8_t BootDrive)
 {
     DISK disk;
     ClrScr();
-    printf("COOLBOOT Stage2 v0.0.12 Booted from drive: 0%xh\n", BootDrive);
+    printf("COOLBOOT Stage2 %s Booted from drive: 0%xh\n", COOLBOOT_VER, BootDrive);
     printf("Enabling A20 line\n");
     EnableA20();
     printf("Initialising disk 0%xh\n", BootDrive);
@@ -67,7 +68,7 @@ void main(const uint8_t BootDrive)
     if(ErrCode == KERNEL_CODE_SUCCESS) return;
     ClrScr();
     CHAR_COLOUR = 0xF4;
-    printf("COOLBOOT stage2 v0.0.11 post-kernel environment\n");
+    printf("COOLBOOT stage2 %s post-kernel environment\n", COOLBOOT_VER);
     printf("FATAL: kernel program terminated with status 0x%x\n", ErrCode);
     printf("See documentation for more information\n");
     return;
