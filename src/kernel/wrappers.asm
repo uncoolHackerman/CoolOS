@@ -31,7 +31,6 @@ LoadIDT:
     mov ebp, esp
     mov eax, [ebp + 8]
     lidt [eax]
-    ;sti
     mov esp, ebp
     pop ebp
     ret
@@ -83,6 +82,16 @@ outb:
     out dx, al
     mov esp, ebp
     pop ebp
+    ret
+
+global x86_cli
+x86_cli:
+    cli
+    ret
+
+global x86_sti
+x86_sti:
+    sti
     ret
 
 %macro isr_noerr 1

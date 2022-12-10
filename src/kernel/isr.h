@@ -559,8 +559,10 @@ void ISR_Handler(Interrupt_Registers* registers) {
         printf("The CPU encountered an unhandled exception: int $0x%x (\"%s\")\n", registers->IntNum, g_Exceptions[registers->IntNum]);
         printf("eax=0x%x, ebx=0x%x, ecx=0x%x, edx=0x%x\nesi=0x%x, edi=0x%x\nesp=0x%x, ebp=0x%x\n", registers->eax, registers->ebx, registers->ecx, registers->edx, registers->esi, registers->edi, registers->esp, registers->ebp);
     }
-    else printf("The CPU encountered an unknown interrupt: int $0x%x\n", registers->IntNum);
-    kernel_panic();
+    else {
+        printf("The CPU encountered an unknown interrupt: int $0x%x\n", registers->IntNum);
+        kernel_panic();
+    }
     return;
 }
 

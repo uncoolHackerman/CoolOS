@@ -2,7 +2,7 @@
 
 ## CoolOS_v0.0.13_x86.img (09/12/2022)
 
-- added IDT and ISR implementations
+- added IDT, ISR, and IRQ implementations
 - added printf support for binary using %b (not in standard libraries but I need it for debugging)
 
 ## CoolOS_v0.0.12_x86.img (08/12/2022)

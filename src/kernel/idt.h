@@ -23,6 +23,8 @@ typedef struct IDT_Desc {
 
 extern void LoadIDT(IDT_Desc* descriptor);
 extern void InterruptHandler_asm(void);
+extern void x86_cli(void);
+extern void x86_sti(void);
 
 #define IDT_ENTRIES 256
 
