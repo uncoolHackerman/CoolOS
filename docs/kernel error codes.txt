@@ -1,1 +1,2 @@
-code 0 = success;
+code 0x00000000 = success;
+code 0xFFFFFFFF = Disk Initialisation failed

@@ -12,7 +12,7 @@
 #define KERNEL_START (void*)0x20000             // chosen arbitrarily but it works
 #define CONFIG_SIGN "CB23110512v0.0.09"
 #define KERNEL_CODE_SUCCESS 0l
-#define COOLBOOT_VER "v0.0.12"
+#define COOLBOOT_VER "v0.0.13"
 
 void main(const uint8_t BootDrive)
 {
@@ -29,6 +29,7 @@ void main(const uint8_t BootDrive)
     printf("Root address: 0x%x\n", g_CurrentDirectory);
     printf("Fat address: 0x%x\n", g_FAT);
     InitialiseConfig(&disk, BootDrive);
+    printf("File: \"/coolboot.sys\":\n%s\n\n", g_COOLBOOTSYS);
     char* SIGNATURE = GetOption("SIGNATURE");
     if(!SIGNATURE) return;
     if(!memcmp(SIGNATURE, CONFIG_SIGN, strlen(SIGNATURE))) {
@@ -65,6 +66,7 @@ void main(const uint8_t BootDrive)
     ReadFile(&disk, BootDrive, fd, KERNEL_START);
     int (*StartKernel)(uint8_t) = KERNEL_START;
     int ErrCode = StartKernel(BootDrive);
+    __asm("cli");
     if(ErrCode == KERNEL_CODE_SUCCESS) return;
     ClrScr();
     CHAR_COLOUR = 0xF4;

@@ -1,5 +1,9 @@
 # Changelogs (dates in DD/MM/YYYY format)
 
+## COOLBOOT v0.0.13 (13/12/2022)
+
+- changed the assembly files from nasm syntax to AT&T syntax in order to fit in better with the i686-elf-gcc toolchain
+
 ## stage2.bin v0.0.12 (08/12/2022)
 
 - made some huge fixes to the coolboot.sys parser although I think the parser needs a proper re-implementation

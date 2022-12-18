@@ -6,6 +6,7 @@
 
 #include "isr.h"
 #include "pic.h"
+#include "keyboard.h"
 
 Interrupt_Handler g_IRQ_Handlers[16];
 
@@ -21,11 +22,28 @@ void IRQ_Handler(Interrupt_Registers* registers) {
     return;
 }
 
+volatile bool TimerPulse = false;
+
+void IRQ0_Handler(Interrupt_Registers* registers) {
+    TimerPulse = true;
+    return;
+}
+
+volatile char KbdBuffer;
+
+void IRQ1_Handler(Interrupt_Registers* registers) {
+    KbdBuffer = getc();
+    return;
+}
+
+// also needs to set up the int $0x80 system call
 void InitIRQ() {
     PIC_Remap(PIC_OFFSET, PIC_OFFSET + 8);
     for(int i = 0; i < 16; i++)
         g_ISR_Handlers[PIC_OFFSET + i] = IRQ_Handler;
-    x86_sti();
+    g_IRQ_Handlers[0] = (Interrupt_Handler)IRQ0_Handler;
+    g_IRQ_Handlers[1] = (Interrupt_Handler)IRQ1_Handler;
+    __asm("sti");
     return;
 }
 

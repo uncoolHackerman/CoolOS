@@ -3,4 +3,5 @@ option format is :OPTION=option;
 DO NOT use :OPTION = option;
 any string which isn't an option name is a comment
 
-:SIGNATURE=CB23110512v0.0.09;        lets stage2 know that the config file is in the right format for the coolboot version it's being used on
+let stage2 know the config file is in the right format
+:SIGNATURE=CB23110512v0.0.09;

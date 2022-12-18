@@ -31,14 +31,14 @@ char* GetOption(char* option) {
     while(*(OPTION - strlen(option) - 1) != ':' || *OPTION != '=') {
         OPTION = strstr(OPTION, option);
         if(!OPTION) {
-        printf("Could not find option %s\n", option);
+        printf("GetOption(): Could not find option \"%s\"\n", option);
         return (char*)NULL;
     }
     }
     OPTION++;
     char* endl = strchr(OPTION, ';');
     if(!endl) {
-        printf("Syntax error: expected ';' at end of option %s\n", option);
+        printf("GetOption(): Syntax error: expected ';' at end of option %s\n", option);
         return (char*)NULL;
     }
     *endl = 0;

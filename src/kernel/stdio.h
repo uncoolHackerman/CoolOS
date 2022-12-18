@@ -37,7 +37,7 @@ enum VGA_Colours {
     VGA_COLOUR_WHITE
 };
 
-uint32_t CursorX = 0;
+int32_t CursorX = 0;
 uint32_t CursorY = 0;
 uint8_t CHAR_FOREGROUND = VGA_COLOUR_WHITE;
 uint8_t CHAR_BACKGROUND = VGA_COLOUR_BLACK;
@@ -51,7 +51,9 @@ void ScrollScreen(unsigned int lines);
 
 void putc(char c)
 {
+    if(!c) return;
     uint32_t Position = (uint32_t)CHAR_BUFFER + ((CursorY * SCREEN_WIDTH + CursorX) * 2);
+    *(char*)Position = 0;
     switch(c)
     {
         case '\n':
@@ -61,6 +63,19 @@ void putc(char c)
         case '\r':
             CursorX = 0;
             break;
+        case 0x08:
+            if(CursorX == 0 && CursorY == 0) goto DrawCursor;
+            CursorX--;
+            Position -= 2;
+            *(char*)Position = 0;
+            if(CursorX < 0) {
+                CursorY--;
+                CursorX = SCREEN_WIDTH - 1;
+            }
+            DrawCursor:
+            *(char*)(CHAR_BUFFER + ((CursorY * SCREEN_WIDTH + CursorX) * 2)) = 0xb3;
+            *(char*)(CHAR_BUFFER + ((CursorY * SCREEN_WIDTH + CursorX) * 2) + 1) = CHAR_BACKGROUND << 4 | CHAR_FOREGROUND;
+            return;
         default:
             *(char*)Position = c;
             CursorX++;
@@ -74,15 +89,16 @@ void putc(char c)
     }
     if(CursorY >= SCREEN_HEIGHT)
         ScrollScreen(1);
-    return;
+    goto DrawCursor;
 }
 
 void ClrScr(void)
 {
-    for(int i = 0; i < SCREEN_HEIGHT * SCREEN_WIDTH; i++)
-        putc(0);
+    memset(CHAR_BUFFER, 0, SCREEN_HEIGHT * SCREEN_WIDTH * 2);
     CursorX = 0;
     CursorY = 0;
+    *(char*)(CHAR_BUFFER) = '_';
+    *(char*)(CHAR_BUFFER + 1) = CHAR_BACKGROUND << 4 | CHAR_FOREGROUND;
     return;
 }
 
